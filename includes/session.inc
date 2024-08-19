@@ -152,10 +152,12 @@ function sess_count($timestamp = 0, $anonymous = true) {
  *
  * @param  string $sid
  *   the session id
+ * @return bool
+ *   True on successful deletion of the session.
  */
 function sess_destroy_sid($sid) {
   // Delete session data.
-  db_query("DELETE FROM {sessions} WHERE sid = '%s'", $sid);
+  $success = db_query("DELETE FROM {sessions} WHERE sid = '%s'", $sid);
 
   // If the session ID being destroyed is the one of the current user,
   // clean-up his/her session data and cookie.
@@ -180,6 +182,7 @@ function sess_destroy_sid($sid) {
       unset($_COOKIE[session_name()]);
     }
   }
+  return (bool) $success;
 }
 
 /**

@@ -544,7 +544,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // Fallback to searching the filesystem if the database connection is
     // not established or the requested file is not found.
     $config = conf_path();
-    $dir = (($type == 'theme_engine') ? 'themes/engines' : "${type}s");
+    $dir = (($type == 'theme_engine') ? 'themes/engines' : "{$type}s");
     $file = (($type == 'theme_engine') ? "$name.engine" : "$name.$type");
 
     foreach (array("$config/$dir/$file", "$config/$dir/$name/$file", "$dir/$file", "$dir/$name/$file") as $file) {
@@ -1178,7 +1178,7 @@ function check_plain($text) {
   // @todo remove this when support for either IE6 or PHP < 5.2.5 is dropped.
 
   if ($php525) {
-    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars($text ?? '', ENT_QUOTES, 'UTF-8');
   }
   return (preg_match('/^./us', $text) == 1) ? htmlspecialchars($text, ENT_QUOTES, 'UTF-8') : '';
 }
@@ -2035,7 +2035,7 @@ function drupal_random_bytes($count) {
   // $random_state does not use drupal_static as it stores random bytes.
   static $random_state, $bytes, $has_openssl, $has_hash;
 
-  $missing_bytes = $count - strlen($bytes);
+  $missing_bytes = $count - strlen($bytes ?? '');
 
   if ($missing_bytes > 0) {
     // PHP versions prior 5.3.4 experienced openssl_random_pseudo_bytes()
@@ -2160,9 +2160,9 @@ function menu_path_is_external($path) {
   // part. Leading control characters may be ignored or mishandled by browsers,
   // so assume such a path may lead to an external location. The range matches
   // all UTF-8 control characters, class Cc.
-  $colonpos = strpos($path, ':');
+  $colonpos = strpos($path ?? '', ':');
   // Some browsers treat \ as / so normalize to forward slashes.
-  $path = str_replace('\\', '/', $path);
+  $path = str_replace('\\', '/', $path ?? '');
   return (strpos($path, '//') === 0) || (preg_match('/^[\x00-\x1F\x7F-\x9F]/u', $path) !== 0)
   || ($colonpos !== FALSE
     && !preg_match('![/?#]!', substr($path, 0, $colonpos))

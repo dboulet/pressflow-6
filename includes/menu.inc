@@ -385,7 +385,9 @@ function _menu_load_objects(&$item, &$map) {
           // 'load arguments' in the hook_menu() entry, but they need
           // some processing. In this case the $function is the key to the
           // load_function array, and the value is the list of arguments.
-          list($function, $args) = each($function);
+          // list($function, $args) = each($function);
+          $args = array_values($function)[0];
+          $function = array_key_first($function);
           $load_functions[$index] = $function;
 
           // Some arguments are placeholders for dynamic items to process.
@@ -904,6 +906,7 @@ function menu_tree_page_data($menu_name = 'navigation') {
             // TODO: Handle the case like a local task on a specific node in the menu.
             $parents = db_fetch_array(db_query("SELECT p1, p2, p3, p4, p5, p6, p7, p8 FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $menu_name, $item['tab_root']));
           }
+          if (!$parents) $parents = [];
           // We always want all the top-level links with plid == 0.
           $parents[] = '0';
 
@@ -1560,13 +1563,11 @@ function menu_set_active_trail($new_trail = NULL) {
     }
 
     $tree = menu_tree_page_data(menu_get_active_menu_name());
-    list($key, $curr) = each($tree);
-
-    while ($curr) {
+    foreach ($tree  as $key => $curr) {
       // Terminate the loop when we find the current path in the active trail.
       if ($curr['link']['href'] == $item['href']) {
         $trail[] = $curr['link'];
-        $curr = FALSE;
+        break;
       }
       else {
         // Add the link if it's in the active trail, then move to the link below.
@@ -1574,7 +1575,6 @@ function menu_set_active_trail($new_trail = NULL) {
           $trail[] = $curr['link'];
           $tree = $curr['below'] ? $curr['below'] : array();
         }
-        list($key, $curr) = each($tree);
       }
     }
     // Make sure the current page is in the trail (needed for the page title),

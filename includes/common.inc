@@ -195,7 +195,7 @@ function drupal_add_feed($url = NULL, $title = '') {
  */
 function drupal_get_feeds($delimiter = "\n") {
   $feeds = drupal_add_feed();
-  return implode($feeds, $delimiter);
+  return implode($delimiter, $feeds);
 }
 
 /**
@@ -1514,7 +1514,7 @@ function url($path = NULL, $options = array()) {
   // Strip leading slashes from internal paths to prevent them becoming external
   // URLs without protocol. /example.com should not be turned into
   // //example.com.
-  $path = ltrim($path, '/');
+  $path = ltrim($path ?? '', '/');
 
   global $base_url;
   static $script;
@@ -3897,10 +3897,8 @@ define('ERROR_REPORTING_DISPLAY_ALL', 2);
  *   The filename that the error was raised in.
  * @param $line
  *   The line number the error was raised at.
- * @param $context
- *   An array that points to the active symbol table at the point the error occurred.
  */
-function _drupal_error_handler($error_level, $message, $filename, $line, $context) {
+function _drupal_error_handler($error_level, $message, $filename, $line) {
   if ($error_level & error_reporting()) {
     // All these constants are documented at http://php.net/manual/en/errorfunc.constants.php
     $types = array(

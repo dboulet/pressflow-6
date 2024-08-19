@@ -265,7 +265,9 @@ class update_xml_parser {
         $this->current_object = &$this->current_release;
         break;
       default:
-        $this->current_object[strtolower($this->current_tag)] = trim($this->current_object[strtolower($this->current_tag)]);
+        if (isset($this->current_object[strtolower($this->current_tag)])) {
+          $this->current_object[strtolower($this->current_tag)] = trim($this->current_object[strtolower($this->current_tag)]);
+        }
         $this->current_tag = '';
     }
   }

@@ -407,7 +407,7 @@ function db_decode_blob($data) {
  */
 function db_escape_string($text) {
   global $active_db;
-  return mysqli_real_escape_string($active_db, $text);
+  return mysqli_real_escape_string($active_db, $text ?? '');
 }
 
 /**

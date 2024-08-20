@@ -125,6 +125,11 @@ function pager_get_querystring() {
 function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = array(), $quantity = 9) {
   global $pager_page_array, $pager_total;
 
+  // These will be empty if no pager query has run yet.
+  if (empty($pager_page_array) || empty($pager_total)) {
+    return '';
+  }
+
   // Calculate various markers within this pager piece:
   // Middle is used to "center" pages around the current page.
   $pager_middle = ceil($quantity / 2);

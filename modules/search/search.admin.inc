@@ -39,8 +39,10 @@ function search_admin_settings() {
   foreach (module_list() as $module) {
     if (module_hook($module, 'search')) {
       $status = module_invoke($module, 'search', 'status');
-      $remaining += $status['remaining'];
-      $total += $status['total'];
+      if (!empty($status)) {
+        $remaining += $status['remaining'];
+        $total += $status['total'];
+      }
     }
   }
   $count = format_plural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');

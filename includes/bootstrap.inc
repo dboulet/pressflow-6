@@ -2259,7 +2259,7 @@ function _drupal_bootstrap_sanitize_input(&$input, $whitelist = array()) {
 
   if (is_array($input)) {
     foreach ($input as $key => $value) {
-      if ($key !== '' && $key[0] === '#' && !in_array($key, $whitelist, TRUE)) {
+      if (is_string($key) && $key !== '' && $key[0] === '#' && !in_array($key, $whitelist, TRUE)) {
         unset($input[$key]);
         $sanitized_keys[] = $key;
       }
